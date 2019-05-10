@@ -1,11 +1,19 @@
 // get submit button
 var MysubmitBtn = document.getElementById("loan-form");
-MysubmitBtn.addEventListener("submit", calculateResult);
+MysubmitBtn.addEventListener("submit", function (e) {
+    // hide result
+    document.getElementById("results").style.display = "none";
 
-// calculate the resu;t
-function calculateResult(e) {
+    // show loader
+    document.getElementById("loading").style.display = "block";
+    setTimeout(calculateResult, 2000);
+    setTimeout(clearLoading, 2000);
     e.preventDefault();
 
+});
+
+// calculate the resu;t
+function calculateResult() {
     // get the id input field
     const Loanamount = document.getElementById("amount");
     const Loaninterest = document.getElementById("interest");
@@ -17,21 +25,22 @@ function calculateResult(e) {
     const totalpayment = document.getElementById("total-payment");
     const totalinterest = document.getElementById("total-interest");
 
-
     // get the input value
     const amountvalue = parseFloat(Loanamount.value);
     const interestvalueCalculate = parseFloat(Loaninterest.value) / 100 / 12;
     const yearsvalueCalculate = parseFloat(Loanyears.value) * 12;
 
     // calculate the montly payment
-
     const calcaulateMontly = Math.pow(1 + interestvalueCalculate, yearsvalueCalculate);
     const montly = (amountvalue * calcaulateMontly * interestvalueCalculate) / (calcaulateMontly - 1);
-
     if (isFinite(montly)) {
         montlypayment.value = montly.toFixed(2);
         totalpayment.value = (montly * yearsvalueCalculate).toFixed(2);
         totalinterest.value = ((montly * yearsvalueCalculate) - amountvalue).toFixed(2);
+        // show result
+        document.getElementById("results").style.display = "block";
+        // hide loader
+        document.getElementById("loading").style.display = "none";
     } else {
         showError(" Please Insert A Correct Number");
     }
@@ -58,4 +67,8 @@ function showError(message) {
 // clear error message
 function clearMessage() {
     document.querySelector('.alert').remove();
+}
+// clear loading 
+function clearLoading() {
+    document.querySelector('#loading').remove();
 }
